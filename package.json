@@ -1,0 +1,11 @@
+{
+  "name": "retirement",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.4",
+    "html-pdf": "^2.2.0",
+    "moment": "^2.24.0"
+  }
+}

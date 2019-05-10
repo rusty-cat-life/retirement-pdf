@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>退職届じぇねれーた</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <style>
+      body {
+        background-color: rgb(206, 219, 239);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 py-4">
+          <h1>退職届じぇねれーた</h1>
+        </div>
+        <div class="col-sm-6 py-4">
+          <h3 class="py-4">What's this?</h3>
+          <p>退職届のpdfを出力するサービスです。</p>
+          <p>出来上がったpdfを印刷してハンコを押すだけ簡単！！！</p>
+        </div>
+        <div class="col-sm-6 py-4">
+          <img
+            src="job_taisyoku_daikou_woman.png"
+            width="400"
+            height="400"
+            alt=""
+          />
+        </div>
+        <div class="col-sm-4 py-4">
+          <div class="form-group">
+            <label for="company_name">会社名</label>
+            <input
+              type="text"
+              id="company_name"
+              class="form-control"
+              placeholder="株式会社〇〇"
+            />
+          </div>
+        </div>
+        <div class="col-sm-4 py-4">
+          <div class="form-group">
+            <label for="president">代表者氏名</label>
+            <input
+              type="text"
+              id="president"
+              class="form-control"
+              placeholder="卑弥呼"
+            />
+          </div>
+        </div>
+        <div class="col-sm-4 py-4">
+          <div class="form-group">
+            <label for="division">所属部署</label>
+            <input
+              type="text"
+              id="division"
+              class="form-control"
+              placeholder="〇〇部〇〇課"
+            />
+          </div>
+        </div>
+        <div class="col-sm-4 py-4">
+          <div class="form-group">
+            <label for="name">退職者氏名</label>
+            <input
+              type="text"
+              id="name"
+              class="form-control"
+              placeholder="会社辞め太郎"
+            />
+          </div>
+        </div>
+        <div class="col-sm-8 py-4">
+          <label>退職日</label>
+          <div class="row form-group">
+            <div class="col-sm-4">
+              <input
+                type="number"
+                id="retire_year"
+                class="form-control"
+                placeholder="2019"
+              />
+              年
+            </div>
+            <div class="col-sm-4">
+              <input
+                type="number"
+                id="retire_month"
+                class="form-control"
+                placeholder="5"
+              />
+              月
+            </div>
+            <div class="col-sm-4">
+              <input
+                type="number"
+                id="retire_day"
+                class="form-control"
+                placeholder="10"
+              />
+              日
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 py-4">
+          <button class="btn btn-success retire">Generate!</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      const getValues = () => {
+        const company_name = document.querySelector('input#company_name')
+        const president = document.querySelector('input#president')
+        const division = document.querySelector('input#division')
+        const name = document.querySelector('input#name')
+        const year = document.querySelector('input#retire_year')
+        const month = document.querySelector('input#retire_month')
+        const day = document.querySelector('input#retire_day')
+
+        return {
+          companyName: company_name && company_name.value,
+          president: president && president.value,
+          division: division && division.value,
+          name: name && name.value,
+          year: year && +year.value,
+          month: month && +month.value,
+          day: day && +day.value
+        }
+      }
+
+      const validate = () => {
+        const {
+          companyName,
+          president,
+          division,
+          name,
+          year,
+          month,
+          day
+        } = getValues()
+
+        const messages = []
+
+        if (!companyName.length) {
+          messages.push('会社名を入力してください。')
+        }
+
+        if (!president.length) {
+          messages.push('代表者氏名を入力してください。')
+        }
+
+        if (!division.length) {
+          messages.push('所属部署を入力してください。')
+        }
+
+        if (!name.length) {
+          messages.push('退職者氏名を入力してください。')
+        }
+
+        if (
+          !Number.isInteger(year) ||
+          !Number.isInteger(month) ||
+          !Number.isInteger(day)
+        ) {
+          messages.push('退職日が無効です。')
+        }
+
+        return messages
+      }
+
+      const makeQuery = () => {
+        const arr = []
+
+        const values = getValues()
+
+        for (const key in values) {
+          arr.push(`${key}=${values[key]}`)
+        }
+
+        return `?${arr.join('&')}`
+      }
+
+      const btn = document.querySelector('button.retire')
+
+      btn.addEventListener('click', async () => {
+        const validateResult = validate()
+
+        if (validateResult.length) {
+          alert(validateResult.join('\n'))
+          return
+        }
+
+        window.open(
+          `http://localhost:8888/api/createPdf${makeQuery()}`,
+          '_blank'
+        )
+      })
+    </script>
+  </body>
+</html>
