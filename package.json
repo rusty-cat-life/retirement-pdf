@@ -9,6 +9,6 @@
     "moment": "^2.24.0"
   },
   "scripts": {
-    "start": "node ./src/index.js"
+    "start": "node src/index.js"
   }
 }

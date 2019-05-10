@@ -9,6 +9,6 @@ app.get('/', (req, res) => {
 
 app.get('/api/createPdf', createPdf)
 
-const port = process.env.port || 443
+const port = 8080
 
 app.listen(port, () => console.log(`app listening on port ${port}!`))
