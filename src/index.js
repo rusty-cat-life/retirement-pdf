@@ -7,6 +7,10 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/static/index.html')
 })
 
+app.get('/woman_logo', (req, res) => {
+  res.sendFile(__dirname + '/static/job_taisyoku_daikou_woman.png')
+})
+
 app.get('/api/createPdf', createPdf)
 
 const port = 8080
