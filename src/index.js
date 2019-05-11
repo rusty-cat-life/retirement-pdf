@@ -3,12 +3,10 @@ const createPdf = require('./api/pdf')
 
 const app = express()
 
+app.use(express.static(__dirname + '/static'))
+
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/static/index.html')
-})
-
-app.get('/woman_logo', (req, res) => {
-  res.sendFile(__dirname + '/static/job_taisyoku_daikou_woman.png')
 })
 
 app.get('/api/createPdf', createPdf)
