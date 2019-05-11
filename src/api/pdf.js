@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer')
 const moment = require('moment')
+const logger = require('../logger')
 
 const validate = p => {
   return (
@@ -119,7 +120,7 @@ const createPdf = async (req, res) => {
 
     await browser.close()
   } catch(err) {
-      console.error(err)
+      logger.error(err)
       res.status(500).send('Internal Server Error')
   }
 }

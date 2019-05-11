@@ -10,5 +10,8 @@
   },
   "scripts": {
     "start": "node src/index.js"
+  },
+  "devDependencies": {
+    "log4js": "^4.1.1"
   }
 }
