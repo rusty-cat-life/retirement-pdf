@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer')
 const moment = require('moment')
-const logger = require('../logger')
+const logger = require('../../logger.js')
 
 const validate = p => {
   return (
