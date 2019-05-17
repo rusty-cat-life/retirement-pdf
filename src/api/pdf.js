@@ -102,23 +102,26 @@ const createPdf = async (req, res) => {
   const date = moment().format('YYYY_MM_DD')
   const filename = `notice_of_retirement_${date}.pdf`
 
-  exec('echo "${createHtml(param)}" | wkhtmltopdf', (err, stdout, stderr) => {
-    if (!err) {
-      logger.error(err)
-      res.status(500).send('Internal Server Error')
-      return
+  exec(
+    'echo "${createHtml(param)}" | wkhtmltopdf - -',
+    (err, stdout, stderr) => {
+      if (!err) {
+        logger.error(err)
+        res.status(500).send('Internal Server Error')
+        return
+      }
+
+      const buffer = Buffer.from(stdout)
+
+      res.writeHead(200, {
+        'Content-Type': 'application/pdf',
+        'Content-disposition': 'attachment;filename=' + filename,
+        'Content-Length': buffer.length
+      })
+
+      res.end(buffer)
     }
-
-    const buffer = Buffer.from(stdout)
-
-    res.writeHead(200, {
-      'Content-Type': 'application/pdf',
-      'Content-disposition': 'attachment;filename=' + filename,
-      'Content-Length': buffer.length
-    })
-
-    res.end(buffer)
-  })
+  )
 }
 
 module.exports = createPdf
