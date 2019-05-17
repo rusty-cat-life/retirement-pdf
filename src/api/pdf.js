@@ -1,6 +1,6 @@
-const puppeteer = require('puppeteer')
 const moment = require('moment')
 const logger = require('../../logger.js')
+const { exec } = require('child_process')
 
 const validate = p => {
   return (
@@ -102,27 +102,23 @@ const createPdf = async (req, res) => {
   const date = moment().format('YYYY_MM_DD')
   const filename = `notice_of_retirement_${date}.pdf`
 
-  try{
-    const browser = await puppeteer.launch()
-    const page = await browser.newPage()
-  
-    await page.setContent(createHtml(param), { waitUntil: 'load' })
-  
-    const pdf = await page.pdf({ format: 'A4' })
-  
+  exec('echo "${createHtml(param)}" | wkhtmltopdf', (err, stdout, stderr) => {
+    if (!err) {
+      logger.error(err)
+      res.status(500).send('Internal Server Error')
+      return
+    }
+
+    const buffer = Buffer.from(stdout)
+
     res.writeHead(200, {
       'Content-Type': 'application/pdf',
       'Content-disposition': 'attachment;filename=' + filename,
-      'Content-Length': pdf.length
+      'Content-Length': buffer.length
     })
-    
-    res.end(pdf)
 
-    await browser.close()
-  } catch(err) {
-      logger.error(err)
-      res.status(500).send('Internal Server Error')
-  }
+    res.end(buffer)
+  })
 }
 
 module.exports = createPdf
