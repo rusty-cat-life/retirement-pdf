@@ -103,7 +103,7 @@ const createPdf = async (req, res) => {
   const filename = `notice_of_retirement_${date}.pdf`
 
   exec(
-    `echo "${createHtml(param)}" | wkhtmltopdf - -`,
+    `echo "${createHtml(param)}" | wkhtmltopdf - | cat`,
     (err, stdout, stderr) => {
       if (!err) {
         logger.error(err)
