@@ -1,6 +1,6 @@
 const moment = require('moment')
 const logger = require('../../logger.js')
-const { exec } = require('child_process')
+const wkhtmltopdf = require('wkhtmltopdf')
 
 const validate = p => {
   return (
@@ -24,12 +24,11 @@ const createHtml = param => {
   return `
 <html>
     <head>
-        <link href="https://fonts.googleapis.com/css?family=Sawarabi+Gothic" rel="stylesheet">
         <style>
             body {
                 margin: 0;
                 padding: 20mm;
-                font-family: "Sawarabi Gothic", "游明朝", YuMincho, "ヒラギノ明朝 ProN W3", "Hiragino Mincho ProN", "HG明朝E", "ＭＳ Ｐ明朝", "ＭＳ 明朝", serif;
+                font-family: "あおぞら明朝 Light", Sawarabi Gothic", "游明朝", YuMincho, "ヒラギノ明朝 ProN W3", "Hiragino Mincho ProN", "HG明朝E", "ＭＳ Ｐ明朝", "ＭＳ 明朝", serif;
                 font-size: 20px;
             }
 
@@ -87,10 +86,6 @@ const createHtml = param => {
 `
 }
 
-const option = {
-  format: 'A4'
-}
-
 const createPdf = async (req, res) => {
   const param = req.query
 
@@ -102,26 +97,20 @@ const createPdf = async (req, res) => {
   const date = moment().format('YYYY_MM_DD')
   const filename = `notice_of_retirement_${date}.pdf`
 
-  exec(
-    `echo "${createHtml(param)}" | wkhtmltopdf - - | cat`,
-    (err, stdout, stderr) => {
-      if (!err) {
-        logger.error(err)
-        res.status(500).send('Internal Server Error')
-        return
-      }
+  try {
+    res.writeHead(200, {
+      'Content-Type': 'application/pdf',
+      'Content-disposition': 'attachment;filename=' + filename
+    })
 
-      const buffer = Buffer.from(stdout)
-
-      res.writeHead(200, {
-        'Content-Type': 'application/pdf',
-        'Content-disposition': 'attachment;filename=' + filename,
-        'Content-Length': buffer.length
-      })
-
-      res.end(buffer)
-    }
-  )
+    wkhtmltopdf(createHtml(param)).pipe(
+      res,
+      { end: true }
+    )
+  } catch (e) {
+    logger.error(e)
+    res.status(500).send('Internal Server Error')
+  }
 }
 
 module.exports = createPdf
