@@ -28,7 +28,7 @@ const createHtml = param => {
             body {
                 margin: 0;
                 padding: 20mm;
-                font-family: "Aozora Mincho Light";
+                font-family: "Aozora Mincho";
                 font-size: 20px;
             }
 
