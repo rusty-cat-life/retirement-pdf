@@ -28,7 +28,7 @@ const createHtml = param => {
             body {
                 margin: 0;
                 padding: 20mm;
-                font-family: "あおぞら明朝 Light", Sawarabi Gothic", "游明朝", YuMincho, "ヒラギノ明朝 ProN W3", "Hiragino Mincho ProN", "HG明朝E", "ＭＳ Ｐ明朝", "ＭＳ 明朝", serif;
+                font-family: "Aozora Mincho Light";
                 font-size: 20px;
             }
 
