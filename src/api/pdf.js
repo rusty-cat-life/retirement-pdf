@@ -30,6 +30,7 @@ const createHtml = param => {
                 margin: 0;
                 padding: 20mm;
                 font-family: "Aozora Mincho";
+                font-weight: 700;
                 font-size: 20px;
             }
 
